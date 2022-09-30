@@ -23,22 +23,12 @@ function App() {
   const [menu, setMenu] = useState(0)
   const [inputPrompt, setInputPrompt] = useState('');
   const [styleModifiers, setStyleModifiers] = useState<modifier[]>()
-  const [errorMsg, setErrorMsg] = useState('')
+  const [customModifiers, setCustomModifiers] = useState<modifier[]>()
+  const [customModifierState, setCustomModifierState] = useState<modifier[]>()
   const [verified, setVerified] = useState(true)
 
-  const checkUser = (user: any) => {
-    if (user.user === null) {
-      setErrorMsg('Need to be logged in to generate. Log in button is in the down right corner.')
-      return false
-    } else if (user.user.user.user.emailVerified === false) {
-      setErrorMsg('Email needs to be verified to generate')
-      return false
-    } else {
-      return true
-    }
-  }
-  const generate = async(input: String, inputModifiers: modifier[], user: object | any) => {
-    const fullInput = addModifiers(input, inputModifiers)
+  const generate = async(input: String, inputModifiers: modifier[], customModifiers: modifier[] ,user: object | any) => {
+    const fullInput = addModifiers(input, inputModifiers, customModifiers)
     
     if (user.user.user.user.emailVerified === false) {
       window.parent.postMessage({pluginMessage: {type: 'userError'}}, '*')
@@ -88,6 +78,7 @@ function App() {
           }
         }
         setUser(updatedUser)
+        console.log(updatedUser)
         parent.postMessage({pluginMessage: {type: 'user', updatedUser}},'*')
       }
 
@@ -97,8 +88,12 @@ function App() {
         setStyleModifiers(defaulModifiers)  
       }
 
+      if (data.customModifiers !== undefined) {
+        setCustomModifierState(data.customModifiers)
+      }
+
       if (data.parameters !== undefined) {
-        generate(data.parameters.prompt, data.styleModifiers, data.user)
+        generate(data.parameters.prompt, data.styleModifiers, data.customModifiers, data.user)
       }
     }
   }, [user]);
@@ -132,8 +127,8 @@ function App() {
           {!verified && <NotVerified setUser={setUser} setRenderLogin={setRenderLogin}/>}
           <Header menu={menu} setMenu={setMenu} />
 
-          {menu === 0 && <Prompt inputPrompt={inputPrompt} setInputPrompt={setInputPrompt} styleModifiers={styleModifiers} user={user}/>}
-          {menu === 1 && <Modifiers inputPrompt={inputPrompt} setInputPrompt={setInputPrompt} styleModifiers={styleModifiers} setStyleModifiers={setStyleModifiers}/>}
+          {menu === 0 && <Prompt inputPrompt={inputPrompt} setInputPrompt={setInputPrompt} styleModifiers={styleModifiers} user={user} customModifiers={customModifiers}/>}
+          {menu === 1 && <Modifiers user={user} styleModifiers={styleModifiers} setStyleModifiers={setStyleModifiers} customModifiers={customModifiers} setCustomModifiers={setCustomModifiers} customModifiersState={customModifierState}/>}
           {menu === 2 && <Settings user={user.user}/>}
         </div>
 

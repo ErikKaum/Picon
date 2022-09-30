@@ -1,7 +1,7 @@
 import { initializeApp } from "firebase/app";
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
-import { getFirestore, doc, getDoc } from "firebase/firestore";
-
+import { getFirestore, doc, getDoc, collection, getDocs, setDoc } from "firebase/firestore";
+import { modifier } from "./utils";
 
 const firebaseConfig = {
   apiKey: "AIzaSyBfZ0oz3vtgMVNDU1L2-6AvkGA7kU68GE8",
@@ -32,6 +32,30 @@ export const getVersion = async() => {
   const docSnap = await getDoc(docRef);
   const data = docSnap.data()
   return data?.version
+}
+
+export const getCustomModifers = async(uid: string) => {
+  const customModifiers: modifier[] = []
+  const body = JSON.stringify({uid: uid})
+  
+  const res = await fetch('https://us-central1-stablehelper-51218.cloudfunctions.net/getCustomModifiers', {
+    method: "POST",
+    body: body
+  })
+  const data = await res.json()
+  data.forEach((item: any) => {
+    customModifiers.push(item) 
+  });
+
+  return customModifiers
+}
+
+export const saveCustomModifier = async(uid:string, item: modifier) => {
+  const body = JSON.stringify({uid: uid, newModifier: item})
+  await fetch('https://us-central1-stablehelper-51218.cloudfunctions.net/writeCustomModifiers', {
+    method: "POST",
+    body: body
+  })
 }
 
 export const getNewToken =async (user: any) => {

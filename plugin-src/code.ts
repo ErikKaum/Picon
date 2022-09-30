@@ -1,14 +1,17 @@
 // Always get modifiers first
-const getStyleModifiers = async() => {
-  const styleModifiers = await figma.clientStorage.getAsync('styleModifiers')
-  if (styleModifiers !== undefined) {
-    figma.ui.postMessage(styleModifiers)
-  }
-}
+// const getStyleModifiers = async() => {
+//   const styleModifiers = await figma.clientStorage.getAsync('styleModifiers')
+//   if (styleModifiers !== undefined) {
+//     figma.ui.postMessage(styleModifiers)
+//   }
+// }
 
 // Utility function for saving modifiers
 const saveStyleModifiers = async(styleModifiers: any) => {
   await figma.clientStorage.setAsync('styleModifiers', styleModifiers)
+}
+const saveCustomModifiers = async(customModifiers:any) => {
+  await figma.clientStorage.setAsync('customModifiers', customModifiers)
 }
 const saveUser = async(user: any) => {
   await figma.clientStorage.setAsync('user', user)
@@ -24,6 +27,7 @@ figma.on('run', ({ parameters }: RunEvent) => {
     figma.showUI(__html__, { visible : showUi, themeColors: true, width: 375 ,height: 500 });
 
     const styleModifiers = await figma.clientStorage.getAsync('styleModifiers')
+    const customModifiers = await figma.clientStorage.getAsync('customModifiers')
     const user = await figma.clientStorage.getAsync('user')
 
     if (user === undefined && showUi === false) {
@@ -31,11 +35,10 @@ figma.on('run', ({ parameters }: RunEvent) => {
     }    
 
     // the only message we post if showUi = true
-    figma.ui.postMessage({user: user, styleModifiers: styleModifiers})
-    
+    figma.ui.postMessage({user: user, styleModifiers: styleModifiers, customModifiers: customModifiers})
 
     if (!showUi) {
-      figma.ui.postMessage({parameters: parameters, styleModifiers: styleModifiers, user: user})
+      figma.ui.postMessage({parameters: parameters, styleModifiers: styleModifiers, customModifiers: customModifiers, user: user})
       figma.ui.onmessage = async(msg) => {
         if (msg.type === 'image') {
           const rect = figma.createRectangle()
@@ -72,7 +75,10 @@ figma.on('run', ({ parameters }: RunEvent) => {
         }
         if (msg.type === "saveModifiers") {
           await saveStyleModifiers(msg.styleModifiers)
-        }      
+        }
+        if (msg.type === "saveCustomModifiers") {
+          await saveCustomModifiers(msg.customModifiers)
+        }
         if (msg.type === 'image') {
           const rect = figma.createRectangle()
           const img = figma.createImage(msg.newBytes)

@@ -41,14 +41,22 @@ export interface modifier {
   checked: boolean
 }
 
-export function addModifiers (input: String, modifiers: modifier[] | undefined) {
+export function addModifiers (input: String, modifiers: modifier[] | undefined, customModifiers: modifier[] | undefined) {
 
   let output = input
+  
   modifiers?.forEach((item) => {
     if (item.checked === true) {
       output = output + ', ' + item.name
     }
   })
+
+  customModifiers?.forEach((item) => {
+    if (item.checked === true) {
+      output = output + ', ' + item.name
+    }
+  })
+
   return output
 }
 

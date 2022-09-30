@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react"
 import { base64ToArrayBuffer, encode, decode, addModifiers, modifier } from "../lib/utils";
 
 
-const Prompt = ({inputPrompt, setInputPrompt, styleModifiers, user}: {inputPrompt: string, setInputPrompt: any, styleModifiers: modifier[] | undefined, user: any}) => {
+const Prompt = ({inputPrompt, setInputPrompt, styleModifiers, user, customModifiers}: {inputPrompt: string, setInputPrompt: any, styleModifiers: modifier[] | undefined, user: any, customModifiers: modifier[] | undefined}) => {
 
   const [buttonText, setButtonText] = useState(<p>Generate</p>)
   const [isLoading, setLoading] = useState(false)
@@ -60,7 +60,7 @@ const Prompt = ({inputPrompt, setInputPrompt, styleModifiers, user}: {inputPromp
 
     console.log(user)
 
-    const fullInput = addModifiers(inputPrompt, styleModifiers)
+    const fullInput = addModifiers(inputPrompt, styleModifiers, customModifiers)
     console.log(fullInput)
 
     // let's just work with any for now
