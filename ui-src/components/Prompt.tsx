@@ -34,10 +34,29 @@ const Prompt = ({inputPrompt, setInputPrompt, styleModifiers, user}: {inputPromp
     return () => clearInterval(interval);
   }, [isLoading, seconds]);
 
+  const checkUser = (user: any) => {
+    if (user.user === null) {
+      setErrorMsg('Need to be logged in to generate. Log in button is in the down right corner.')
+      return false
+    } else if (user.user.user.user.emailVerified === false) {
+      setErrorMsg('Email needs to be verified to generate')
+      return false
+    } else {
+      return true
+    }
+  }
+
   const generate = async() => {
     setButtonText(<div className="icon icon--spinner icon--spin"></div>)
     reset()
     setLoading(true)
+
+    const okey = checkUser(user)
+    if (!okey) {
+      setButtonText(<p>Generate</p>)
+      setLoading(false)    
+      return
+    }
 
     console.log(user)
 
@@ -76,7 +95,7 @@ const Prompt = ({inputPrompt, setInputPrompt, styleModifiers, user}: {inputPromp
   }
 
   return(
-    <div className="flex flex-col h-full w-full p-5">
+    <div className="flex flex-col w-full p-5">
       <div className="flex h-28 flex-col space-y-2 mb-2">
         <p className="type type--bold">Write what you want to see:</p>
         <textarea onChange={(e) => {handleChangle(e)}} rows={3} className="h-full input__field" placeholder="A monkey flying a space ship" value={(inputPrompt.length > 0 ? inputPrompt : "")}></textarea>

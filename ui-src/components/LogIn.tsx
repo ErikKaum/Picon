@@ -2,7 +2,7 @@ import React, { useState } from "react"
 import { signIn } from "../lib/auth"
 import picon from '../assets/picon.png' 
 
-const LogIn = ({setUser}: {setUser: any}) => {
+const LogIn = ({setUser, setRenderLogin}: {setUser: any, setRenderLogin: any}) => {
 
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
@@ -36,6 +36,7 @@ const LogIn = ({setUser}: {setUser: any}) => {
       }
       window.parent.postMessage({pluginMessage: {type: 'user', updatedUser}}, '*')
       setUser(updatedUser)
+      setRenderLogin(false)
     } catch(e) {
       setError(e?.toString())
     }
@@ -59,7 +60,7 @@ const LogIn = ({setUser}: {setUser: any}) => {
   return(
     <div className="flex flex-col items-center h-full w-full p-5">
       
-      <h1 className="type type--xlarge type--bold mb-2">Welcome to Picon</h1>
+      <h1 className="type type--xlarge type--bold mb-2">Log in to Picon</h1>
       <img className="mb-5" src={picon} width={100} height={100}></img>
 
       <form className="flex flex-col w-full">
@@ -77,6 +78,8 @@ const LogIn = ({setUser}: {setUser: any}) => {
       
       <p className="type text-red-600">{errorMessage}</p>
     </div>
+
+
   )
 }
 

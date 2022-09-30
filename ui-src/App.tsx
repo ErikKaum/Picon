@@ -11,19 +11,40 @@ import Modifiers from "./components/Modifiers";
 import Prompt from "./components/Prompt";
 import LogIn from "./components/LogIn";
 import OldVersion from "./components/OldVersion";
+import Footer from "./components/Footer";
+import NotVerified from "./components/NotVerified";
 
-const CURRENT_VERSION = 1
+const CURRENT_VERSION = 2
 
 function App() {
+  const [renderLogin, setRenderLogin] = useState(false)
   const [oldVersion, setOldVersion] = useState(false)
   const [user, setUser] = useState<any>({user: null})
   const [menu, setMenu] = useState(0)
   const [inputPrompt, setInputPrompt] = useState('');
   const [styleModifiers, setStyleModifiers] = useState<modifier[]>()
+  const [errorMsg, setErrorMsg] = useState('')
+  const [verified, setVerified] = useState(true)
 
+  const checkUser = (user: any) => {
+    if (user.user === null) {
+      setErrorMsg('Need to be logged in to generate. Log in button is in the down right corner.')
+      return false
+    } else if (user.user.user.user.emailVerified === false) {
+      setErrorMsg('Email needs to be verified to generate')
+      return false
+    } else {
+      return true
+    }
+  }
   const generate = async(input: String, inputModifiers: modifier[], user: object | any) => {
     const fullInput = addModifiers(input, inputModifiers)
     
+    if (user.user.user.user.emailVerified === false) {
+      window.parent.postMessage({pluginMessage: {type: 'userError'}}, '*')
+      return
+    }
+
     console.log(fullInput)
 
     // let's just work with any for now
@@ -92,24 +113,34 @@ function App() {
     checkVersion()
   },[])
 
-  const handleSignOut = () => {
-    signOut()
-    setUser({user: null})
-  }
+  useEffect(() => {
+    if (user.user !== null) {
+      if (user.user.user.user.emailVerified === false) {
+        setVerified(false)
+      }
+    }
+  },[user])
 
   return (
     <>
-      {user.user === null && <LogIn setUser={setUser}/>}
-      {user.user !== null &&
-      <main>
-        {oldVersion && <OldVersion />}
-        <Header menu={menu} setMenu={setMenu} />
-        {menu === 0 && <Prompt inputPrompt={inputPrompt} setInputPrompt={setInputPrompt} styleModifiers={styleModifiers} user={user}/>}
-        {menu === 1 && <Modifiers inputPrompt={inputPrompt} setInputPrompt={setInputPrompt} styleModifiers={styleModifiers} setStyleModifiers={setStyleModifiers}/>}
-        {menu === 2 && <Settings user={user.user}/>}
-        <div className="p-5">
-          <button className="type button button--secondary" onClick={handleSignOut}>Log out</button>
+      {renderLogin && <LogIn setUser={setUser} setRenderLogin={setRenderLogin}/>}
+      {!renderLogin &&
+      <main className="flex flex-col w-full h-full justify-between">
+
+        <div className="flex flex-col">
+          {oldVersion && <OldVersion />}
+          {!verified && <NotVerified setUser={setUser} setRenderLogin={setRenderLogin}/>}
+          <Header menu={menu} setMenu={setMenu} />
+
+          {menu === 0 && <Prompt inputPrompt={inputPrompt} setInputPrompt={setInputPrompt} styleModifiers={styleModifiers} user={user}/>}
+          {menu === 1 && <Modifiers inputPrompt={inputPrompt} setInputPrompt={setInputPrompt} styleModifiers={styleModifiers} setStyleModifiers={setStyleModifiers}/>}
+          {menu === 2 && <Settings user={user.user}/>}
         </div>
+
+        <div className="flex">
+          <Footer user={user} setUser={setUser} renderLogin={renderLogin} setRenderLogin={setRenderLogin}/>
+        </div>
+
       </main>
       }
     </>

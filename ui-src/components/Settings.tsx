@@ -7,7 +7,7 @@ const Settings = ({user}:{user: any}) => {
       <p className="type type--bold mb-5">Settings</p>
 
       <div className="flex flex-col w-full space-y-1 mb-10">
-        <p className="type">Logged in as: {user.user.user?.email}</p>
+        <p className="type">Logged in as: {user?.user?.user?.email}</p>
       </div>
     
     </div>

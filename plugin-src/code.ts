@@ -21,7 +21,7 @@ figma.on('run', ({ parameters }: RunEvent) => {
   
   const main = async() => {
     const showUi = parameters?.prompt === undefined ? true : false
-    figma.showUI(__html__, { visible : showUi, themeColors: true, width: 375 ,height: 475 });
+    figma.showUI(__html__, { visible : showUi, themeColors: true, width: 375 ,height: 500 });
 
     const styleModifiers = await figma.clientStorage.getAsync('styleModifiers')
     const user = await figma.clientStorage.getAsync('user')
@@ -53,7 +53,11 @@ figma.on('run', ({ parameters }: RunEvent) => {
         }
         if (msg.type === 'timeOutError') {
           figma.closePlugin('Timeout, try to generate again')
-        }  
+        }
+        if (msg.type === 'userError') {
+          console.log(msg.errorMsg)
+          figma.closePlugin("Email needs to be verified to generate images")
+        } 
       }
     }
     if (showUi) {
