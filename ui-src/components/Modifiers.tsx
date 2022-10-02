@@ -43,6 +43,9 @@ const Modifiers = ({user, styleModifiers, setStyleModifiers, customModifiers, se
 
 
   const addModifier = async() => {
+    if (newCustomModifier?.length === 0) {
+      return
+    }
     const toAppend : modifier = {name: newCustomModifier, checked: false}
     setCustomModifiers([...customModifiers!, toAppend])
     await saveCustomModifier(user.creds.uid, toAppend)
