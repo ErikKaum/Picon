@@ -51,6 +51,9 @@ export const getCustomModifers = async(uid: string) => {
 }
 
 export const saveCustomModifier = async(uid:string, item: modifier) => {
+  if (item.name.length === 0) {
+    return
+  }
   const body = JSON.stringify({uid: uid, newModifier: item})
   await fetch('https://us-central1-stablehelper-51218.cloudfunctions.net/writeCustomModifiers', {
     method: "POST",

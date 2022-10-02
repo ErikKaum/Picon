@@ -14,7 +14,7 @@ import OldVersion from "./components/OldVersion";
 import Footer from "./components/Footer";
 import NotVerified from "./components/NotVerified";
 
-const CURRENT_VERSION = 2
+const CURRENT_VERSION = 3
 
 function App() {
   const [renderLogin, setRenderLogin] = useState(false)
