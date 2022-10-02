@@ -44,6 +44,7 @@ figma.on('run', ({ parameters }: RunEvent) => {
           const rect = figma.createRectangle()
           const img = figma.createImage(msg.newBytes)
           rect.resize(512, 512)
+          rect.name = msg.fullInput
           rect.fills = [{ type: 'IMAGE', imageHash: img.hash, scaleMode: 'FILL'}]
           figma.currentPage.appendChild(rect)
           figma.closePlugin()
@@ -83,6 +84,7 @@ figma.on('run', ({ parameters }: RunEvent) => {
           const rect = figma.createRectangle()
           const img = figma.createImage(msg.newBytes)
           rect.resize(512, 512)
+          rect.name = msg.fullInput
           rect.fills = [{ type: 'IMAGE', imageHash: img.hash, scaleMode: 'FILL'}]
           figma.currentPage.appendChild(rect)
         }

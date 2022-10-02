@@ -54,7 +54,7 @@ function App() {
       const imgData = await decode(canvas, context, imgArray)
       const newBytes = await encode(canvas, context, imgData)
       
-      window.parent.postMessage({pluginMessage: {type: 'image', newBytes}}, '*')
+      window.parent.postMessage({pluginMessage: {type: 'image', newBytes, fullInput}}, '*')
     } else if (res.status === 409) {
       window.parent.postMessage({pluginMessage: {type: 'tooManyError'}}, '*')
     } else if (res.status === 401) {

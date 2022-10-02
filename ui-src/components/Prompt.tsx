@@ -80,7 +80,7 @@ const Prompt = ({inputPrompt, setInputPrompt, styleModifiers, user, customModifi
       const imgData = await decode(canvas, context, imgArray)
       const newBytes = await encode(canvas, context, imgData)
       
-      window.parent.postMessage({pluginMessage: {type: 'image', newBytes}}, '*')
+      window.parent.postMessage({pluginMessage: {type: 'image', newBytes, fullInput}}, '*')
       setButtonText(<p>Generate</p>)
       setLoading(false)  
     } else if (res.status === 409) {
