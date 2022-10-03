@@ -13,6 +13,7 @@ import LogIn from "./components/LogIn";
 import OldVersion from "./components/OldVersion";
 import Footer from "./components/Footer";
 import NotVerified from "./components/NotVerified";
+import Search from "./components/Search";
 
 const CURRENT_VERSION = 3
 
@@ -129,7 +130,8 @@ function App() {
 
           {menu === 0 && <Prompt inputPrompt={inputPrompt} setInputPrompt={setInputPrompt} styleModifiers={styleModifiers} user={user} customModifiers={customModifiers}/>}
           {menu === 1 && <Modifiers user={user} styleModifiers={styleModifiers} setStyleModifiers={setStyleModifiers} customModifiers={customModifiers} setCustomModifiers={setCustomModifiers} customModifiersState={customModifierState}/>}
-          {menu === 2 && <Settings user={user.user}/>}
+          {menu === 2 && <Search user={user}/>}
+          {menu === 3 && <Settings user={user.user}/>}
         </div>
 
         <div className="flex">

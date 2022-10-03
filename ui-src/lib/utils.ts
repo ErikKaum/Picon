@@ -21,7 +21,7 @@ export async function encode(canvas : any , ctx :any, imageData : ImageData | un
     })
   }
   
-export async function decode(canvas :any , ctx :any , bytes : any) {
+export async function decode(canvas :any , ctx :any , bytes : any, width?: number, height?: number) {
     const url = URL.createObjectURL(new Blob([bytes]))
     const image = await new Promise((resolve, reject) => {
       const img = new Image()
@@ -29,10 +29,15 @@ export async function decode(canvas :any , ctx :any , bytes : any) {
       img.onerror = () => reject()
       img.src = url
     })
-    canvas.width = 512
-    canvas.height = 512
+    // if no values are given for width and height, it's 512
+    const imgWidth = width? width : 512 
+    const imgHeight = height? height :  512
+    
+    canvas.width = imgWidth
+    canvas.height = imgHeight
+
     ctx.drawImage(image, 0, 0)
-    const imageData = ctx.getImageData(0, 0, 512, 512)
+    const imageData = ctx.getImageData(0, 0, imgWidth, imgHeight)
     return imageData
 }
 

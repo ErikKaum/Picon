@@ -7,7 +7,13 @@ module.exports = {
     // "./src/**/*.{js,ts,jsx,tsx}",
   ],
   theme: {
-    extend: {},
+    extend: {
+      display: ["group-hover"],
+      colors :{
+        "transparent-40" : "rgb(255,255,255,0.7)",
+        "transparent-50" : "rgb(255,255,255,0.8)"
+      },
+    },
   },
   plugins: [],
 }

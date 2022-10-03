@@ -17,9 +17,16 @@ const Header = ({menu, setMenu} : {menu: number, setMenu: any}) => {
       </div>
 
       <div onClick={() => setMenu(2)} className="hover:cursor-pointer flex justify-center items-center">
-        <div className={"icon icon--settings " + (menu === 2 ? 'icon--blue' : '')}></div>
-        <p className={(menu === 2 ? 'type--bold' : '')}>Settings</p>
+        <div className={"icon icon--library " + (menu === 2 ? 'icon--blue' : '')}></div>
+        <p className={(menu === 2 ? 'type--bold' : '')}>Search</p>
       </div>
+
+      <div onClick={() => setMenu(3)} className="hover:cursor-pointer flex justify-center items-center">
+        <div className={"icon icon--settings " + (menu === 3 ? 'icon--blue' : '')}></div>
+        <p className={(menu === 3 ? 'type--bold' : '')}>Settings</p>
+      </div>
+
+
     </div>
   </div>
 

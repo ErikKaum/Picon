@@ -24,7 +24,7 @@ figma.on('run', ({ parameters }: RunEvent) => {
   
   const main = async() => {
     const showUi = parameters?.prompt === undefined ? true : false
-    figma.showUI(__html__, { visible : showUi, themeColors: true, width: 375 ,height: 500 });
+    figma.showUI(__html__, { visible : showUi, themeColors: true, width: 400 ,height: 600 });
 
     const styleModifiers = await figma.clientStorage.getAsync('styleModifiers')
     const customModifiers = await figma.clientStorage.getAsync('customModifiers')
@@ -47,6 +47,10 @@ figma.on('run', ({ parameters }: RunEvent) => {
           rect.name = msg.fullInput
           rect.fills = [{ type: 'IMAGE', imageHash: img.hash, scaleMode: 'FILL'}]
           figma.currentPage.appendChild(rect)
+
+          figma.currentPage.selection = [rect];
+          figma.viewport.scrollAndZoomIntoView([rect]);
+
           figma.closePlugin()
         }
         if (msg.type === 'tooManyError') {
@@ -83,10 +87,19 @@ figma.on('run', ({ parameters }: RunEvent) => {
         if (msg.type === 'image') {
           const rect = figma.createRectangle()
           const img = figma.createImage(msg.newBytes)
-          rect.resize(512, 512)
+
+          if (msg.width !== undefined && msg.height !== undefined) {
+            rect.resize(msg.width, msg.height)
+          } else {
+            rect.resize(512, 512)
+          }
+
           rect.name = msg.fullInput
           rect.fills = [{ type: 'IMAGE', imageHash: img.hash, scaleMode: 'FILL'}]
           figma.currentPage.appendChild(rect)
+
+          figma.currentPage.selection = [rect];
+          figma.viewport.scrollAndZoomIntoView([rect]);
         }
         if (msg.type === 'signOut') {
           await deleteUser()
