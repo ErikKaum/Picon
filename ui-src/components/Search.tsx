@@ -27,11 +27,13 @@ const Search = ({user}: {user: any}) => {
     
     const userId = user?.creds?.uid ? user.creds.uid : 'undefined';
     const body = JSON.stringify({query: searchString, userId: userId})
-    const res = await fetch(`http://localhost:5001/stablehelper-51218/us-central1/getLexicaQuery`, {
+    console.log(body)
+    await fetch(`https://us-central1-stablehelper-51218.cloudfunctions.net/getLexicaQuery`, {
       method: 'POST',
       body: body
     })
 
+    const res = await fetch(`https://lexica.art/api/v1/search?q=${searchString}`)
     const data = await res.json()
     setImages(data?.images)
     setLoading(false)
@@ -44,7 +46,7 @@ const Search = ({user}: {user: any}) => {
   const addToCanvas = async (imgUrl: string, imgPrompt: string, width: number, height: number) => {
     const fullInput = imgPrompt
     const res = await fetch(imgUrl)
-    await fetch('http://localhost:5001/stablehelper-51218/us-central1/getLexicaImage')
+    await fetch('https://us-central1-stablehelper-51218.cloudfunctions.net/getLexicaImage')
     const data = await res.blob()
   
     const canvas = document.createElement('canvas')
